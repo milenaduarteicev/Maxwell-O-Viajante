@@ -28,6 +28,10 @@ public class Game {
             ger.imprimirLimiar();
             ger.imprimirPoderJoia();
 
+            if (ger.getPoderJoia() <= 0) {
+                ger.setPoderJoia(0);
+            }
+
             // Verificar se existem cidades vizinhas para viajar
             List<Aresta> ligacoes = cidadeAtual.ligacoes;
             if (ligacoes.isEmpty()) {
@@ -39,7 +43,7 @@ public class Game {
             System.out.println("Opções de cidades para viajar:");
             for (int i = 0; i < ligacoes.size(); i++) {
                 Aresta aresta = ligacoes.get(i);
-                System.out.println((i + 1) + ". Cidade " + aresta.destino.nome + " (Custo: $" + aresta.custo + ")");
+                System.out.println((i + 1) + ". Cidade " + aresta.destino.nome + " Custo: $1");
             }
 
             // Obter a escolha do jogador
@@ -70,7 +74,8 @@ public class Game {
 
             // Viajar para a cidade escolhida
             cidadeAtual = arestaEscolhida.destino;
-            ger.setMoeda(-arestaEscolhida.custo);
+            ger.setPoderJoia(ger.getPoderJoia()+arestaEscolhida.custo);
+            ger.setMoeda(-1);
             cidadesVisitadas.add(cidadeAtual);
 
             System.out.println("");
@@ -98,6 +103,7 @@ public class Game {
                 missaoAceita = false;
                 missaoAtual -= 1;
                 System.out.println("A missão foi abandonada. Continue sua jornada!");
+                continue;
             }
             System.out.println("");
 
@@ -222,6 +228,10 @@ public class Game {
             }
             System.out.println("");
 
+            if (ger.getLimiar() < ger.getPoderJoia() || ger.getMoeda() <= 0 || cidadeAtual.nome.equals("Nargumun")) {
+                break;
+            }
+
             // Questionário mercador
             System.out.println("------------------------------------------------------------------------");
             System.out.print("\u001B[3mMercador: \u001B[0m");
@@ -238,10 +248,6 @@ public class Game {
             mercador.decisoesQuestionario(opcaoMoedaLimiar, arestaEscolhida.custo);
             System.out.println("");
             ger.imprimirMoeda();
-
-            if (ger.getLimiar() < ger.getPoderJoia() || ger.getMoeda() == 0 || cidadeAtual.nome.equals("Nargumun")) {
-                break;
-            }
 
         }
 
